@@ -11,16 +11,33 @@ import NotFound from '../../features/errors/NotFound';
 import NavBar from './NavBar';
 import { Container } from 'semantic-ui-react';
 import ServerError from '../../features/errors/ServerError';
+import LoginForm from '../../features/users/LoginForm';
+import { useStore } from '../stores/store';
+import { useEffect } from 'react';
+import LoadingComponent from './LoadingComponent';
+import ModalContainer from '../common/modals/ModalContainer';
 
 
 
 function App() {
 
   const location = useLocation();
+    const {commonStore, userStore} = useStore();
+
+    useEffect(() => {
+      if (commonStore.token) {
+        userStore.getUser().finally(() => commonStore.setAppLoaded());
+      } else {
+        commonStore.setAppLoaded();
+      }
+    }, [commonStore, userStore])
+
+    if (!commonStore.appLoaded) return <LoadingComponent content='Loading app...' />
 
   return (
     <>
       <ToastContainer position='bottom-right' hideProgressBar />
+      <ModalContainer />
       {/* <Routes>
         <Route index path='/' element={<HomePage />} />
         <Route element={<Layout />}>
@@ -45,6 +62,7 @@ function App() {
                 <Route key={location.key} path={['/createActivity', '/manage/:id']} component={ActivityForm} />
                 <Route path='/errors' component={TestErrors} />
                 <Route path='/server-error' component={ServerError} />
+                <Route path='/login' component={LoginForm} />
                 <Route path='*' component={NotFound} />
               </Switch>
             </Container>
