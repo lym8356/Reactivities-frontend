@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Grid, Header, Image } from "semantic-ui-react";
+import { Button, Grid, Header } from "semantic-ui-react";
 import PhotoWidgetCropper from "./PhotoWidgetCropper";
 import PhotoWidgetDropzone from "./PhotoWidgetDropzone";
 
@@ -15,7 +15,6 @@ export default function PhotoUploadWidget({ loading, uploadPhoto }: Props) {
 
     function onCrop() {
         if (cropper) {
-            cropper.getCroppedCanvas().toBlob(blob => console.log(blob));
             cropper.getCroppedCanvas().toBlob(blob => uploadPhoto(blob!));
         }
     }
